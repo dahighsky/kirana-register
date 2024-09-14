@@ -5,6 +5,7 @@ target/
 !**/src/test/**/target/
 
 application.properties
+src/main/java/com/example/kirana_register/service/DataInitializerService.java
 
 ### STS ###
 .apt_generated
