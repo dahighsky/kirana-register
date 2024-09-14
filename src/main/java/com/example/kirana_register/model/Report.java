@@ -1,15 +1,13 @@
 package com.example.kirana_register.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Map;
 
-@Getter
-@Setter
+@Data
 @Document(collection = "reports")
 public class Report {
     @Id
@@ -18,10 +16,12 @@ public class Report {
     private ReportType type;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-    private BigDecimal totalCredits;
-    private BigDecimal totalDebits;
-    private BigDecimal netFlow;
+    private Map<String, BigDecimal> totalCredits;
+    private Map<String, BigDecimal> totalDebits;
+    private Map<String, BigDecimal> netFlow;
     private LocalDateTime generatedAt;
+
+    // getters and setters
 
     public enum ReportType {
         WEEKLY, MONTHLY, YEARLY

@@ -18,14 +18,17 @@ import java.util.Map;
 @RequestMapping("/api")
 public class TransactionController {
 
-    @Autowired
-    private TransactionService transactionService;
+    private final TransactionService transactionService;
+    private final ReportService reportService;
 
-    @Autowired
-    private ReportService reportService;
+    // created for initialising database
+//    private final DataInitializerService dataInitializerService;
 
-//    @Autowired // created for initialising database
-//    private DataInitializerService dataInitializerService;
+    public TransactionController(TransactionService transactionService, ReportService reportService){
+        this.transactionService = transactionService;
+        this.reportService = reportService;
+//        this.dataInitializerService = dataInitializerService;
+    }
 
     @PostMapping("/transactions")
     public ResponseEntity<Transaction> recordTransaction(@RequestBody Transaction transaction) {
@@ -41,29 +44,37 @@ public class TransactionController {
     }
 
     @GetMapping("/reports/weekly")
-    public ResponseEntity<Map<String, BigDecimal>> getWeeklyReport(
+    public ResponseEntity<Map<String, Map<String, BigDecimal>>> getWeeklyReport(
             @RequestParam String userId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime date) {
-        return ResponseEntity.ok(reportService.generateWeeklyReport(userId, date));
+        Map<String, Map<String, BigDecimal>> report = reportService.generateWeeklyReport(userId, date);
+        return ResponseEntity.ok(report);
     }
 
     @GetMapping("/reports/monthly")
-    public ResponseEntity<Map<String, BigDecimal>> getMonthlyReport(
+    public ResponseEntity<Map<String, Map<String, BigDecimal>>> getMonthlyReport(
             @RequestParam String userId,
             @RequestParam int year,
             @RequestParam int month) {
-        return ResponseEntity.ok(reportService.generateMonthlyReport(userId, year, month));
+        Map<String, Map<String, BigDecimal>> report = reportService.generateMonthlyReport(userId, year, month);
+        return ResponseEntity.ok(report);
     }
 
     @GetMapping("/reports/yearly")
-    public ResponseEntity<Map<String, BigDecimal>> getYearlyReport(
+    public ResponseEntity<Map<String, Map<String, BigDecimal>>> getYearlyReport(
             @RequestParam String userId,
             @RequestParam int year) {
-        return ResponseEntity.ok(reportService.generateYearlyReport(userId, year));
+        Map<String, Map<String, BigDecimal>> report = reportService.generateYearlyReport(userId, year);
+        return ResponseEntity.ok(report);
     }
 
 //    @GetMapping("/initialize") // for initialising database;
 //    public String initializeData() {
 //        return dataInitializerService.initializeData();
+//    }
+
+//    @GetMapping("/convertCurrencies")
+//    public String convertAmounts()  {
+//        return dataInitializerService.updateAllTransactionsWithConvertedAmounts();
 //    }
 }
