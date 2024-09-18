@@ -21,8 +21,6 @@ public class Report {
     private Map<String, BigDecimal> netFlow;
     private LocalDateTime generatedAt;
 
-    // getters and setters
-
     public enum ReportType {
         WEEKLY, MONTHLY, YEARLY
     }

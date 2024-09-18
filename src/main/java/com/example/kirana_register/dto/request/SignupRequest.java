@@ -1,13 +1,9 @@
-package com.example.kirana_register.dto;
+package com.example.kirana_register.dto.request;
 
-import lombok.Getter;
-import lombok.Setter;
-
-@Setter
-@Getter
+import lombok.Data;
+@Data
 public class SignupRequest {
     // Getters and setters
     private String username;
     private String password;
-
 }

@@ -1,0 +1,89 @@
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+  api-docs:
+    path: /v3/api-docs
+  paths-to-match: /api/**
+
+spring:
+  security:
+    filter:
+      order: 10
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    io.github.resilience4j.ratelimiter: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+resilience4j:
+  circuitbreaker:
+    instances:
+      recordTransaction:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 5s
+        failureRateThreshold: 50
+        eventConsumerBufferSize: 10
+      getTransactions:
+        registerHealthIndicator: true
+        slidingWindowSize: 100
+        minimumNumberOfCalls: 10
+        permittedNumberOfCallsInHalfOpenState: 3
+        waitDurationInOpenState: 5s
+        failureRateThreshold: 50
+        eventConsumerBufferSize: 10
+      weeklyReport:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        waitDurationInOpenState: 10s
+        failureRateThreshold: 50
+        eventConsumerBufferSize: 10
+      monthlyReport:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        waitDurationInOpenState: 10s
+        failureRateThreshold: 50
+        eventConsumerBufferSize: 10
+      yearlyReport:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 3
+        permittedNumberOfCallsInHalfOpenState: 2
+        waitDurationInOpenState: 15s
+        failureRateThreshold: 50
+        eventConsumerBufferSize: 10
+  ratelimiter:
+    instances:
+      recordTransaction:
+        limitForPeriod: 10
+        limitRefreshPeriod: 1m
+        timeoutDuration: 1s
+      getTransactions:
+        limitForPeriod: 20
+        limitRefreshPeriod: 1m
+        timeoutDuration: 2s
+      weeklyReport:
+        limitForPeriod: 5
+        limitRefreshPeriod: 1m
+        timeoutDuration: 5s
+      monthlyReport:
+        limitForPeriod: 3
+        limitRefreshPeriod: 1m
+        timeoutDuration: 10s
+      yearlyReport:
+        limitForPeriod: 1
+        limitRefreshPeriod: 1m
+        timeoutDuration: 15s
