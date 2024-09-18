@@ -1,0 +1,629 @@
+{
+    "openapi": "3.0.1",
+    "servers": [
+      {
+        "url": "http://localhost:8080",
+        "description": "Generated server url"
+      }
+    ],
+    "security": [
+      {
+        "Authorization": []
+      }
+    ],
+    "tags": [
+      {
+        "name": "Transaction",
+        "description": "Transaction management APIs"
+      }
+    ],
+    "paths": {
+      "/api/transaction/": {
+        "get": {
+          "tags": [
+            "Transaction"
+          ],
+          "summary": "Get transactions",
+          "description": "Retrieves transactions for a user within a date range",
+          "operationId": "getTransactions",
+          "parameters": [
+            {
+              "name": "userId",
+              "in": "query",
+              "description": "User ID",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "start",
+              "in": "query",
+              "description": "Start date and time",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "format": "date-time"
+              }
+            },
+            {
+              "name": "end",
+              "in": "query",
+              "description": "End date and time",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          ],
+          "responses": {
+            "429": {
+              "description": "Too many requests",
+              "content": {
+                "*/*": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/TransactionResponse"
+                    }
+                  }
+                }
+              }
+            },
+            "200": {
+              "description": "Successfully retrieved transactions",
+              "content": {
+                "*/*": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/TransactionResponse"
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid input",
+              "content": {
+                "*/*": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/TransactionResponse"
+                    }
+                  }
+                }
+              }
+            },
+            "503": {
+              "description": "Service unavailable",
+              "content": {
+                "*/*": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/TransactionResponse"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "Authorization": []
+            }
+          ]
+        },
+        "post": {
+          "tags": [
+            "Transaction"
+          ],
+          "summary": "Record a new transaction",
+          "description": "Creates a new transaction record",
+          "operationId": "recordTransaction",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionRequest"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "Transaction recorded successfully",
+              "content": {
+                "*/*": {
+                  "schema": {
+                    "$ref": "#/components/schemas/TransactionResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid input",
+              "content": {
+                "*/*": {
+                  "schema": {
+                    "$ref": "#/components/schemas/TransactionResponse"
+                  }
+                }
+              }
+            },
+            "503": {
+              "description": "Service unavailable",
+              "content": {
+                "*/*": {
+                  "schema": {
+                    "$ref": "#/components/schemas/TransactionResponse"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "Authorization": []
+            }
+          ]
+        }
+      },
+      "/api/auth/signup": {
+        "post": {
+          "tags": [
+            "auth-controller"
+          ],
+          "operationId": "signup",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignupRequest"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "*/*": {
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/auth/login": {
+        "post": {
+          "tags": [
+            "auth-controller"
+          ],
+          "operationId": "login",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginRequest"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "*/*": {
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/transaction/reports/yearly": {
+        "get": {
+          "tags": [
+            "Transaction"
+          ],
+          "summary": "Get yearly report",
+          "description": "Generates a yearly report for a user",
+          "operationId": "getYearlyReport",
+          "parameters": [
+            {
+              "name": "userId",
+              "in": "query",
+              "description": "User ID",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "year",
+              "in": "query",
+              "description": "Year",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "429": {
+              "description": "Too many requests",
+              "content": {
+                "*/*": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ReportResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid input",
+              "content": {
+                "*/*": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ReportResponse"
+                  }
+                }
+              }
+            },
+            "200": {
+              "description": "Successfully generated yearly report",
+              "content": {
+                "*/*": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ReportResponse"
+                  }
+                }
+              }
+            },
+            "503": {
+              "description": "Service unavailable",
+              "content": {
+                "*/*": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ReportResponse"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "Authorization": []
+            }
+          ]
+        }
+      },
+      "/api/transaction/reports/weekly": {
+        "get": {
+          "tags": [
+            "Transaction"
+          ],
+          "summary": "Get weekly report",
+          "description": "Generates a weekly report for a user",
+          "operationId": "getWeeklyReport",
+          "parameters": [
+            {
+              "name": "userId",
+              "in": "query",
+              "description": "User ID",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "date",
+              "in": "query",
+              "description": "Report date",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          ],
+          "responses": {
+            "429": {
+              "description": "Too many requests",
+              "content": {
+                "*/*": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ReportResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid input",
+              "content": {
+                "*/*": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ReportResponse"
+                  }
+                }
+              }
+            },
+            "503": {
+              "description": "Service unavailable",
+              "content": {
+                "*/*": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ReportResponse"
+                  }
+                }
+              }
+            },
+            "200": {
+              "description": "Successfully generated weekly report",
+              "content": {
+                "*/*": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ReportResponse"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "Authorization": []
+            }
+          ]
+        }
+      },
+      "/api/transaction/reports/monthly": {
+        "get": {
+          "tags": [
+            "Transaction"
+          ],
+          "summary": "Get monthly report",
+          "description": "Generates a monthly report for a user",
+          "operationId": "getMonthlyReport",
+          "parameters": [
+            {
+              "name": "userId",
+              "in": "query",
+              "description": "User ID",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "year",
+              "in": "query",
+              "description": "Year",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "month",
+              "in": "query",
+              "description": "Month",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "enum": [
+                  "JANUARY",
+                  "FEBRUARY",
+                  "MARCH",
+                  "APRIL",
+                  "MAY",
+                  "JUNE",
+                  "JULY",
+                  "AUGUST",
+                  "SEPTEMBER",
+                  "OCTOBER",
+                  "NOVEMBER",
+                  "DECEMBER"
+                ]
+              }
+            }
+          ],
+          "responses": {
+            "429": {
+              "description": "Too many requests",
+              "content": {
+                "*/*": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ReportResponse"
+                  }
+                }
+              }
+            },
+            "200": {
+              "description": "Successfully generated monthly report",
+              "content": {
+                "*/*": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ReportResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid input",
+              "content": {
+                "*/*": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ReportResponse"
+                  }
+                }
+              }
+            },
+            "503": {
+              "description": "Service unavailable",
+              "content": {
+                "*/*": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ReportResponse"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "Authorization": []
+            }
+          ]
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "TransactionRequest": {
+          "type": "object",
+          "properties": {
+            "userId": {
+              "type": "string"
+            },
+            "amount": {
+              "type": "number"
+            },
+            "currency": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string"
+            }
+          }
+        },
+        "TransactionResponse": {
+          "type": "object",
+          "properties": {
+            "transactionId": {
+              "type": "string"
+            },
+            "userId": {
+              "type": "string"
+            },
+            "amount": {
+              "type": "number"
+            },
+            "currency": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string"
+            },
+            "timestamp": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "convertedAmounts": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "SignupRequest": {
+          "type": "object",
+          "properties": {
+            "username": {
+              "type": "string"
+            },
+            "password": {
+              "type": "string"
+            }
+          }
+        },
+        "LoginRequest": {
+          "type": "object",
+          "properties": {
+            "username": {
+              "type": "string"
+            },
+            "password": {
+              "type": "string"
+            }
+          }
+        },
+        "Report": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "userId": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "WEEKLY",
+                "MONTHLY",
+                "YEARLY"
+              ]
+            },
+            "startDate": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "endDate": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "totalCredits": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "number"
+              }
+            },
+            "totalDebits": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "number"
+              }
+            },
+            "netFlow": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "number"
+              }
+            },
+            "generatedAt": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        "ReportResponse": {
+          "type": "object",
+          "properties": {
+            "report": {
+              "$ref": "#/components/schemas/Report"
+            }
+          }
+        }
+      },
+      "securitySchemes": {
+        "Authorization": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
+      }
+    }
+  }
