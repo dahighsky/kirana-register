@@ -6,10 +6,13 @@ import com.example.kirana_register.model.Transaction;
 import com.example.kirana_register.repository.ReportRepository;
 import com.example.kirana_register.repository.TransactionRepository;
 import com.example.kirana_register.service.ReportService;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.Year;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
@@ -68,8 +71,8 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public ReportResponse generateMonthlyReport(String userId, int year, int month) {
-        LocalDateTime startOfMonth = LocalDateTime.of(year, month, 1, 0, 0);
+    public ReportResponse generateMonthlyReport(String userId, Year year, Month month) {
+        LocalDateTime startOfMonth = LocalDateTime.of(year.getValue(), month, 1, 0, 0);
         LocalDateTime endOfMonth = startOfMonth.plusMonths(1);
         if (endOfMonth.isAfter(LocalDateTime.now()))
             endOfMonth = LocalDateTime.now();
@@ -77,8 +80,8 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public ReportResponse generateYearlyReport(String userId, int year) {
-        LocalDateTime startOfYear = LocalDateTime.of(year, 1, 1, 0, 0);
+    public ReportResponse generateYearlyReport(String userId, @NotNull Year year) {
+        LocalDateTime startOfYear = LocalDateTime.of(year.getValue(), 1, 1, 0, 0);
         LocalDateTime endOfYear = startOfYear.plusYears(1);
         if (endOfYear.isAfter(LocalDateTime.now()))
             endOfYear = LocalDateTime.now();

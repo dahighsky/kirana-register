@@ -12,6 +12,7 @@ public class TransactionResponse {
     private String userId;
     private BigDecimal amount;
     private String currency;
+    private String type;
     private LocalDateTime timestamp;
     private Map<String, BigDecimal> convertedAmounts;
 }

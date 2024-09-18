@@ -32,7 +32,7 @@ public class TransactionServiceImpl implements TransactionService {
         this.fxRatesClient = fxRatesClient;
     }
 
-    @Cacheable(value = "exchangeRates", key = "'latestRates'")
+    @Cacheable(value = "exchangeRates", key = "'latestRates'", sync = true)
     public Map<String, BigDecimal> getExchangeRates() {
         return fxRatesClient.getExchangeRates();
     }

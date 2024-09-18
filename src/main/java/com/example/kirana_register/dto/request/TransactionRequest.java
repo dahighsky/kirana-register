@@ -9,5 +9,5 @@ public class TransactionRequest {
     private String userId;
     private BigDecimal amount;
     private String currency;
-    private String description;
+    private String type;
 }

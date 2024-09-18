@@ -1,6 +1,21 @@
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+  api-docs:
+    path: /v3/api-docs
+  paths-to-match: /api/**
+
+spring:
+  security:
+    filter:
+      order: 10
+
 logging:
   level:
+    org.springframework.security: DEBUG
     io.github.resilience4j.ratelimiter: DEBUG
+
 management:
   endpoints:
     web:
