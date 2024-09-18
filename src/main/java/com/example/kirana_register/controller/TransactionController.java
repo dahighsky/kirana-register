@@ -1,5 +1,8 @@
 package com.example.kirana_register.controller;
 
+import com.example.kirana_register.dto.request.TransactionRequest;
+import com.example.kirana_register.dto.response.ReportResponse;
+import com.example.kirana_register.dto.response.TransactionResponse;
 import com.example.kirana_register.model.Transaction;
 //import com.example.kirana_register.service.DataInitializerService; //to be used only when creating the database for testing
 import com.example.kirana_register.service.TransactionService;
@@ -12,13 +15,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/transaction")
 public class TransactionController {
 
     private final TransactionService transactionService;
@@ -33,10 +34,10 @@ public class TransactionController {
 //        this.dataInitializerService = dataInitializerService;
     }
 
-    @PostMapping("/transactions")
+    @PostMapping("/")
     @CircuitBreaker(name = "recordTransaction", fallbackMethod = "recordTransactionFallback")
     @RateLimiter(name = "recordTransaction")
-    public ResponseEntity<Transaction> recordTransaction(@RequestBody Transaction transaction) {
+    public ResponseEntity<TransactionResponse> recordTransaction(@RequestBody TransactionRequest transaction) {
         return ResponseEntity.ok(transactionService.recordTransaction(transaction));
     }
 
@@ -44,10 +45,10 @@ public class TransactionController {
         return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(null);
     }
 
-    @GetMapping("/transactions")
+    @GetMapping("/")
     @CircuitBreaker(name = "getTransactions", fallbackMethod = "getTransactionsFallback")
     @RateLimiter(name = "getTransactions")
-    public ResponseEntity<List<Transaction>> getTransactions(
+    public ResponseEntity<List<TransactionResponse>> getTransactions(
             @RequestParam String userId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
@@ -64,14 +65,14 @@ public class TransactionController {
     @GetMapping("/reports/weekly")
     @CircuitBreaker(name = "weeklyReport", fallbackMethod = "getWeeklyReportFallback")
     @RateLimiter(name = "weeklyReport")
-    public ResponseEntity<Map<String, Map<String, BigDecimal>>> getWeeklyReport(
+    public ResponseEntity<ReportResponse> getWeeklyReport(
             @RequestParam String userId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime date) {
-        Map<String, Map<String, BigDecimal>> report = reportService.generateWeeklyReport(userId, date);
+        ReportResponse report = reportService.generateWeeklyReport(userId, date);
         return ResponseEntity.ok(report);
     }
 
-    public ResponseEntity<Map<String, Map<String, BigDecimal>>> getWeeklyReportFallback(String userId, LocalDateTime date, Exception e) {
+    public ResponseEntity<ReportResponse> getWeeklyReportFallback(String userId, LocalDateTime date, Exception e) {
         if (e instanceof RequestNotPermitted) {
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(null);
         }
@@ -81,15 +82,15 @@ public class TransactionController {
     @GetMapping("/reports/monthly")
     @CircuitBreaker(name = "monthlyReport", fallbackMethod = "getMonthlyReportFallback")
     @RateLimiter(name = "monthlyReport")
-    public ResponseEntity<Map<String, Map<String, BigDecimal>>> getMonthlyReport(
+    public ResponseEntity<ReportResponse> getMonthlyReport(
             @RequestParam String userId,
             @RequestParam int year,
             @RequestParam int month) {
-        Map<String, Map<String, BigDecimal>> report = reportService.generateMonthlyReport(userId, year, month);
+        ReportResponse report = reportService.generateMonthlyReport(userId, year, month);
         return ResponseEntity.ok(report);
     }
 
-    public ResponseEntity<Map<String, Map<String, BigDecimal>>> getMonthlyReportFallback(String userId, int year, int month, Exception e) {
+    public ResponseEntity<ReportResponse> getMonthlyReportFallback(String userId, int year, int month, Exception e) {
         if (e instanceof RequestNotPermitted) {
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(null);
         }
@@ -99,14 +100,14 @@ public class TransactionController {
     @GetMapping("/reports/yearly")
     @CircuitBreaker(name = "yearlyReport", fallbackMethod = "getYearlyReportFallback")
     @RateLimiter(name = "yearlyReport")
-    public ResponseEntity<Map<String, Map<String, BigDecimal>>> getYearlyReport(
+    public ResponseEntity<ReportResponse> getYearlyReport(
             @RequestParam String userId,
             @RequestParam int year) {
-        Map<String, Map<String, BigDecimal>> report = reportService.generateYearlyReport(userId, year);
+        ReportResponse report = reportService.generateYearlyReport(userId, year);
         return ResponseEntity.ok(report);
     }
 
-    public ResponseEntity<Map<String, Map<String, BigDecimal>>> getYearlyReportFallback(String userId, int year, Exception e) {
+    public ResponseEntity<ReportResponse> getYearlyReportFallback(String userId, int year, Exception e) {
         if (e instanceof RequestNotPermitted) {
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(null);
         }
