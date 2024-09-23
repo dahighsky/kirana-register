@@ -4,6 +4,7 @@ import com.example.kirana_register.dto.request.TransactionRequest;
 import com.example.kirana_register.dto.response.ReportResponse;
 import com.example.kirana_register.dto.response.TransactionResponse;
 import com.example.kirana_register.model.Transaction;
+import com.example.kirana_register.service.RefundService;
 import com.example.kirana_register.service.TransactionService;
 import com.example.kirana_register.service.ReportService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
@@ -38,10 +39,12 @@ public class TransactionController {
 
     private final TransactionService transactionService;
     private final ReportService reportService;
+    private final RefundService refundService;
 
-    public TransactionController(TransactionService transactionService, ReportService reportService) {
+    public TransactionController(TransactionService transactionService, ReportService reportService, RefundService refundService) {
         this.transactionService = transactionService;
         this.reportService = reportService;
+        this.refundService = refundService;
     }
 
     @PostMapping("/")
@@ -76,6 +79,26 @@ public class TransactionController {
     }
 
     public ResponseEntity<List<Transaction>> getTransactionsFallback(String userId, LocalDateTime start, LocalDateTime end, Exception e) {
+        if (e instanceof RequestNotPermitted) {
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+        }
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).build();
+    }
+
+    @GetMapping("/refund")
+    @CircuitBreaker(name = "refundTransaction", fallbackMethod = "refundTransactionFallback")
+    @RateLimiter(name = "refundTransaction")
+    @Operation(summary = "Refund transaction", description = "Refunds Transaction using transaction id")
+    @ApiResponse(responseCode = "200", description = "Successfully refunded transactions")
+    @ApiResponse(responseCode = "400", description = "Invalid input")
+    @ApiResponse(responseCode = "429", description = "Too many requests")
+    @ApiResponse(responseCode = "503", description = "Service unavailable")
+    public ResponseEntity<TransactionResponse> refundTransaction(
+            @Parameter(description = "Transaction ID", required = true) @NotNull @RequestParam String transactionId) {
+        return ResponseEntity.ok(refundService.refundTransaction(transactionId));
+    }
+
+    public ResponseEntity<TransactionResponse> refundTransactionFallback(String userId, Exception e) {
         if (e instanceof RequestNotPermitted) {
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
         }

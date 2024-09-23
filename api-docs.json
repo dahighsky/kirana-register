@@ -135,8 +135,8 @@
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "Transaction recorded successfully",
+          "400": {
+            "description": "Invalid input",
             "content": {
               "*/*": {
                 "schema": {
@@ -145,8 +145,8 @@
               }
             }
           },
-          "400": {
-            "description": "Invalid input",
+          "200": {
+            "description": "Transaction recorded successfully",
             "content": {
               "*/*": {
                 "schema": {
@@ -487,6 +487,74 @@
           }
         ]
       }
+    },
+    "/api/transaction/refund": {
+      "get": {
+        "tags": [
+          "Transaction"
+        ],
+        "summary": "Refund transaction",
+        "description": "Refunds Transaction using transaction id",
+        "operationId": "refundTransaction",
+        "parameters": [
+          {
+            "name": "transactionId",
+            "in": "query",
+            "description": "Transaction ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "429": {
+            "description": "Too many requests",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionResponse"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Successfully refunded transactions",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service unavailable",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -505,6 +573,9 @@
           },
           "type": {
             "type": "string"
+          },
+          "isRefund": {
+            "type": "boolean"
           }
         }
       },
