@@ -93,7 +93,7 @@ public class ReportServiceImpl implements ReportService {
                 .collect(Collectors.toMap(
                         currency -> currency,
                         currency -> transactions.stream()
-                                .filter(t -> t.getType() == type)
+                                .filter(t -> (t.getType() == type && !t.getIsRefund()))
                                 .map(t -> t.getConvertedAmounts().getOrDefault(currency, BigDecimal.ZERO))
                                 .reduce(BigDecimal.ZERO, BigDecimal::add)
                 ));

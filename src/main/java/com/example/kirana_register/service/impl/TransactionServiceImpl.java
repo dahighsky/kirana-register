@@ -50,6 +50,7 @@ public class TransactionServiceImpl implements TransactionService {
         transaction.setAmount(transactionRequest.getAmount());
         transaction.setCurrency(transactionRequest.getCurrency());
         transaction.setTimestamp(LocalDateTime.now());
+        transaction.setIsRefund(transactionRequest.getIsRefund());
 
         // Fetch exchange rates
         Map<String, BigDecimal> exchangeRates = getExchangeRates();

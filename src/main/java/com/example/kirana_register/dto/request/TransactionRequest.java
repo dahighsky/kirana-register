@@ -12,4 +12,5 @@ public class TransactionRequest {
     private BigDecimal amount;
     private String currency;
     private String type;
+    private Boolean isRefund = false;
 }
