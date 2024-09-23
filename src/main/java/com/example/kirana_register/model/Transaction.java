@@ -18,6 +18,9 @@ public class Transaction {
     private TransactionType type;
     private LocalDateTime timestamp;
     private Map<String, BigDecimal> convertedAmounts ;
+    private Boolean refunded;
+    private Transaction refund;
+    private Boolean isRefund;
 
     public enum TransactionType {
         CREDIT, DEBIT
